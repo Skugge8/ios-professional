@@ -7,12 +7,18 @@
 
 import UIKit
 
+protocol LoginViewControllerDelegate: AnyObject {
+    func didLogin(_ sender: LoginViewController)
+    func didLogin()
+}
+
 class LoginViewController: UIViewController {
     
     let loginView = LoginView()
     let signInButton = UIButton(type: .system)
     let errorMessageLabel = UILabel()
     
+    weak var delegate: LoginViewControllerDelegate?
     
     var username: String? {
         return loginView.usernameTextField.text
@@ -85,6 +91,7 @@ extension LoginViewController {
 }
 
 
+// MARK: - ACTIONS
 extension LoginViewController {
     @objc func signInTapped(sender: UIButton) {
         errorMessageLabel.isHidden = true
@@ -92,18 +99,19 @@ extension LoginViewController {
     }
      
     private func login() {
-        guard let username = username , let password = password else {
-            assertionFailure("Username / password should never be nil")
-            return
-        }
+//        guard let username = username , let password = password else {
+//            assertionFailure("Username / password should never be nil")
+//            return
+//        }
+//        
+//        if username.isEmpty || password.isEmpty {
+//            configureView(withMessage: "Username / Password can not be blank")
+//            return 
+//        }
         
-        if username.isEmpty || password.isEmpty {
-            configureView(withMessage: "Username / Password can not be blank")
-            return 
-        }
-        
-        if username == "skugge" && password == "password" {
+        if username == "" && password == "" {
             signInButton.configuration?.showsActivityIndicator = true
+            delegate?.didLogin()
         } else {
             configureView(withMessage: "Incorrect username / password")
         }
